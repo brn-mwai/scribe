@@ -22,7 +22,7 @@ from .adapters.orbit import OrbitAdapter
 from .config import load_config
 from .drift import classify, opens_mr, summarize
 from .fingerprint import fingerprint, section_fingerprints
-from .manifest import build_manifest, dumps, loads
+from .manifest import build_manifest, dumps, loads, restore, snapshot
 from .renderer import render
 from .synthesizer import synthesize
 
@@ -97,6 +97,7 @@ def run(
     new_sfps = section_fingerprints(sections)
 
     first_run = not os.path.exists(manifest_path)
+    old_manifest: dict | None = None
     if first_run:
         drift_class = "material"
         old_sfps: dict[str, str] = {}
@@ -120,13 +121,19 @@ def run(
     with open(agents_path, "w", encoding="utf-8") as fh:
         fh.write(new_md)
     manifest = build_manifest(
-        new_fp, new_sfps, cfg["source"], _now(), __version__
+        new_fp, new_sfps, cfg["source"], _now(), __version__, snapshot(struct)
     )
     manifest_text = dumps(manifest)
     with open(manifest_path, "w", encoding="utf-8") as fh:
         fh.write(manifest_text)
 
-    summary = summarize(None, struct) if first_run else "Structure drift detected."
+    if first_run:
+        summary = summarize(None, struct)
+    else:
+        previous = restore(old_manifest.get("structure")) if old_manifest else None
+        summary = (
+            summarize(previous, struct) if previous else "Structure drift detected."
+        )
     files = {AGENTS_FILE: new_md, _manifest_rel(): manifest_text}
     body = build_mr_body(summary, files)
     gitlab = GitLabAdapter()
