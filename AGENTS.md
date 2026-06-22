@@ -39,18 +39,9 @@ Built under the team coding standards loaded in Claude Code. Apply them on every
 <!-- scribe:begin overview -->
 ## Project overview
 
-Scribe keeps a repository's `AGENTS.md` accurate as the code changes. It queries the
-GitLab Orbit knowledge graph for the real structure of a codebase, synthesizes a
-structured `AGENTS.md`, opens a merge request with it, and then detects drift on a
-schedule and opens corrective MRs. Generation is the on-ramp; the self-healing
-maintenance loop is the product.
-
-- **Language:** Python 3.11+
-- **CLI:** `scribe` (commands: `run`, `check`) — Typer
-- **Graph access:** GitLab Orbit Local (primary), Orbit Remote (optional enrichment), behind one adapter
-- **Action:** opens a GitLab merge request via `glab`; never auto-merges
-- **Catalog artifact:** a Duo flow (`flow/scribe.yml`) published to the AI Catalog
-- **License:** MIT
+- **Languages:** bash, javascript, python
+- **Modules:** 6
+- **Definitions:** 130
 <!-- scribe:end overview -->
 
 ## Conventions (human-owned)
@@ -64,35 +55,46 @@ maintenance loop is the product.
 <!-- scribe:begin architecture -->
 ## Architecture map
 
-Data flow: **Trigger → Orbit Adapter → Extractor → Synthesizer → Renderer → MR Action**,
-with **Fingerprinter → Drift gate** deciding whether a run produces an MR at all.
+### Modules
 
-- `scribe/adapters/orbit.py` — only code that talks to Orbit (`get_graph_schema`, then `query_graph` / `glab orbit local query`). Returns a normalized `RepoStructure`.
-- `scribe/extractor.py` — `RepoStructure` → ranked modules, core files (fan-in), test/config locations.
-- `scribe/synthesizer.py` — pure: structure → `Sections`. Owns editorial rules. No I/O.
-- `scribe/renderer.py` — merges generated sections into existing `AGENTS.md`, preserving human blocks. Idempotent.
-- `scribe/fingerprint.py` — stable structural hash; formatting-insensitive, structure-sensitive.
-- `scribe/drift.py` — classifies `none | minor | material` against the configured threshold.
-- `scribe/adapters/gitlab.py` — branch, commit, open MR via `glab`. No merge rights.
-- `scribe/cli.py` — orchestration (`run`, `check`, `--dry-run`).
-- `flow/scribe.yml` — Duo flow config for the AI Catalog.
+- `(root)` (9 files)
+- `.github/` (1 file)
+- `docs/` (3 files)
+- `flow/` (1 file)
+- `scribe/` (13 files)
+- `tests/` (12 files)
+
+### Core components
+
+- `Section` (DecoratedClass) in `scribe/models.py` -- fan-in 19
+- `RepoStructure` (DecoratedClass) in `scribe/models.py` -- fan-in 16
+- `fingerprint` (Function) in `scribe/fingerprint.py` -- fan-in 14
+- `render` (Function) in `scribe/renderer.py` -- fan-in 10
+- `synthesize` (Function) in `scribe/synthesizer.py` -- fan-in 8
+- `classify` (Function) in `scribe/drift.py` -- fan-in 7
+- `rank_core` (Function) in `scribe/extractor.py` -- fan-in 7
+- `OrbitAdapter` (Class) in `scribe/adapters/orbit.py` -- fan-in 5
 <!-- scribe:end architecture -->
 
 <!-- scribe:begin layout -->
 ## Where things live
 
-```
-scribe/            engine package (pure core + adapters + cli)
-  adapters/        orbit.py, gitlab.py  (all side effects)
-  *.py             extractor, synthesizer, renderer, fingerprint, drift, cli
-flow/scribe.yml    AI Catalog flow config
-tests/             pytest suite
-  fixtures/        recorded graph responses + sample repos
-docs/              scribe-system-design.md, IMPLEMENTATION.md
-.scribe.yml        runtime config (sections, drift threshold, mr settings)
-install.sh         end-user installer
-pyproject.toml     packaging + console_scripts: scribe
-```
+- **Tests:**
+  - `tests/__init__.py`
+  - `tests/conftest.py`
+  - `tests/fixtures/graph_small.json`
+  - `tests/test_cli.py`
+  - `tests/test_config_manifest.py`
+  - `tests/test_drift.py`
+  - `tests/test_extractor.py`
+  - `tests/test_fingerprint.py`
+  - `tests/test_gitlab.py`
+  - `tests/test_orbit.py`
+  - `tests/test_renderer.py`
+  - `tests/test_synthesizer.py`
+- **Config:**
+  - `.scribe.yml`
+  - `pyproject.toml`
 <!-- scribe:end layout -->
 
 ## Build, test, run

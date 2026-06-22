@@ -1,0 +1,12 @@
+{
+  "fingerprint": "5255a48ca19077f3a586361dcbc1e9ef1bee35cdf3a559ad1fdb976d4484c253",
+  "generated_at": "2026-06-22T21:47:31Z",
+  "orbit_source": "local",
+  "schema_version": 1,
+  "scribe_version": "0.1.0",
+  "section_fingerprints": {
+    "architecture": "379d539cb067c88bb27a31dcbad7980b2f3e525379cd5b17d65206cee54a8ac1",
+    "layout": "886f078358de94eefb429be9a48e480f02d7a53796b822ce89c581b959eb94cf",
+    "overview": "0ce11292daddaed53fb04f347d3e91dfe67c076f4dd9aaf4f4d4fdf5339fb741"
+  }
+}
