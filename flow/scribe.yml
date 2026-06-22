@@ -1,0 +1,47 @@
+version: "1.0"
+name: scribe-context-maintenance
+description: >
+  Scribe keeps a repository's AGENTS.md accurate. It queries the GitLab Orbit
+  knowledge graph for the real code structure, synthesizes managed AGENTS.md
+  blocks, detects drift against the committed manifest, and opens a corrective
+  merge request when the structure has moved. Human content is never touched;
+  Scribe never merges.
+
+inputs:
+  repo:
+    type: string
+    description: Target repository path checked out in the runner workspace.
+    default: "."
+  dry_run:
+    type: boolean
+    description: When true, print the proposed AGENTS.md diff without opening an MR.
+    default: false
+
+triggers:
+  - type: schedule
+    description: Nightly drift check against the committed AGENTS.md.
+    cron: "0 3 * * *"
+  - type: manual
+    description: On-demand run from the AI Catalog or a pipeline.
+
+steps:
+  - id: install
+    name: Install Scribe
+    run: pip install -e ".[dev]"
+
+  - id: scribe-run
+    name: Generate or heal AGENTS.md
+    run: |
+      if [ "${dry_run}" = "true" ]; then
+        scribe run --repo "${repo}" --dry-run
+      else
+        scribe run --repo "${repo}"
+      fi
+    description: >
+      Structure -> synthesize -> render -> fingerprint -> drift gate. On first
+      run or material drift, opens a merge request touching only AGENTS.md and
+      the manifest. Exits clean when there is no drift.
+
+permissions:
+  api: read_api
+  merge_requests: create

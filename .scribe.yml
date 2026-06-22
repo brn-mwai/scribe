@@ -1,0 +1,13 @@
+source: local
+core_count: 8
+drift_threshold: minor
+sections:
+  - overview
+  - architecture
+  - layout
+paths:
+  include: ["**/*"]
+  exclude: ["vendor/**", "node_modules/**", "**/*.min.*"]
+mr:
+  target_branch: main
+  labels: ["scribe", "documentation"]

@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "scribe"
+version = "0.1.0"
+description = "Self-healing AGENTS.md context layer for AI-native codebases."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = ["typer>=0.9", "pyyaml>=6.0"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.4"]
+
+[project.scripts]
+scribe = "scribe.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["scribe*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,0 +1,25 @@
+{
+  "files": [
+    { "path": "payments/service.py", "language": "Python" },
+    { "path": "payments/models.py", "language": "Python" },
+    { "path": "api/routes.py", "language": "Python" },
+    { "path": "api/auth.py", "language": "Python" },
+    { "path": "tests/test_payments.py", "language": "Python" },
+    { "path": "pyproject.toml", "language": null },
+    { "path": "README.md", "language": "Markdown" }
+  ],
+  "definitions": [
+    { "name": "PaymentService", "kind": "class", "path": "payments/service.py" },
+    { "name": "charge", "kind": "method", "path": "payments/service.py" },
+    { "name": "AuthService", "kind": "class", "path": "api/auth.py" },
+    { "name": "route_charge", "kind": "function", "path": "api/routes.py" }
+  ],
+  "references": [
+    { "from": "api/routes.py", "to_def": "PaymentService" },
+    { "from": "api/auth.py", "to_def": "PaymentService" },
+    { "from": "tests/test_payments.py", "to_def": "PaymentService" },
+    { "from": "api/routes.py", "to_def": "AuthService" },
+    { "from": "payments/service.py", "to_def": "AuthService" }
+  ],
+  "owners": ["alice", "bob"]
+}

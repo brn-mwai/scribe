@@ -1,0 +1,20 @@
+stages:
+  - test
+
+# Pinned to the standards' security-CI layers, mapped to GitLab-native templates.
+# CodeQL is GitHub-only, so SAST runs on GitLab's Semgrep-based analyzer. DAST is
+# omitted on purpose: Scribe is a batch CLI/flow with no runtime web surface to spin up.
+include:
+  - template: Jobs/Secret-Detection.gitlab-ci.yml
+  - template: Jobs/SAST.gitlab-ci.yml
+  - template: Jobs/Dependency-Scanning.gitlab-ci.yml
+
+pytest:
+  stage: test
+  image: python:3.11-slim
+  script:
+    - pip install -e ".[dev]"
+    - pytest -q
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH
