@@ -8,6 +8,8 @@ When your code changes, Scribe notices the docs are now wrong and opens a merge 
 
 [What it does](#what-it-does) · [Why it matters](#why-it-matters) · [How it works](#how-it-works) · [Quickstart](#quickstart) · [Commands](#commands) · [Status](#project-status)
 
+[![tests](https://github.com/brn-mwai/scribe/actions/workflows/tests.yml/badge.svg)](https://github.com/brn-mwai/scribe/actions/workflows/tests.yml)
+
 MIT licensed · Python 3.11+ · Built for the GitLab Transcend Hackathon
 
 </div>
