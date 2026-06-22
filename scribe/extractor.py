@@ -12,12 +12,16 @@ from .models import Definition, Module, RepoStructure
 
 
 def rank_core(struct: RepoStructure, n: int) -> list[Definition]:
-    """Return the n most-referenced definitions, highest fan-in first.
+    """Return the n most-referenced production definitions, highest fan-in first.
 
+    Definitions living in test files are excluded: a heavily-called test helper
+    is real, but it is not a "core component" a reader should orient around.
     Ties break on (path, name) so the order is stable regardless of the order
     Orbit returned rows in -- a hard requirement for a byte-stable AGENTS.md.
     """
-    ranked = sorted(struct.definitions, key=lambda d: (-d.fan_in, d.path, d.name))
+    test_files = set(struct.test_paths)
+    production = [d for d in struct.definitions if d.path not in test_files]
+    ranked = sorted(production, key=lambda d: (-d.fan_in, d.path, d.name))
     return ranked[: max(n, 0)]
 
 

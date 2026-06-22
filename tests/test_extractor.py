@@ -37,3 +37,17 @@ def test_module_tree_sorted():
 def test_rank_core_zero():
     struct = make_struct()
     assert rank_core(struct, 0) == []
+
+
+def test_rank_core_excludes_test_file_definitions():
+    struct = make_struct(
+        definitions=(
+            ("make_helper", "function", "tests/conftest.py", 99),
+            ("Engine", "class", "core/engine.py", 5),
+        ),
+        test_paths=("tests/conftest.py",),
+    )
+    core = rank_core(struct, 5)
+    names = [d.name for d in core]
+    assert names == ["Engine"]
+    assert "make_helper" not in names
