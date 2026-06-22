@@ -49,6 +49,27 @@ Generating a docs file once is easy - lots of tools do it. **Keeping it accurate
 
 ---
 
+## "Why not just ask an LLM to write it?"
+
+Fair question - and Scribe is built around the answer.
+
+You can ask Claude or Copilot to write an `AGENTS.md` once. That's a *generator*, and generators are commoditized. The hard problem was never *writing* the file - it's **keeping it true without a human babysitting it.**
+
+| | LLM writes it once | Scribe |
+|---|---|---|
+| Where the facts come from | Guessed from the files it could fit in its context window | Read from the real code graph (actual references, real fan-in) |
+| On a big repo | Approximates, sometimes confabulates | Knows - the graph holds the whole codebase |
+| "Most important files" | A vibe | A graph query, ranked by inbound references |
+| When you refactor | Silently goes stale | Detects drift and opens a corrective MR |
+| Run it twice | Two different files | Byte-identical, reviewable diff |
+| Your hand-written notes | Overwritten on re-prompt | Never touched - only its own blocks change |
+
+> **An LLM can write `AGENTS.md` once, from a guess. Scribe keeps it true, from the graph - automatically, deterministically, and without ever touching the parts you wrote.**
+
+The edge widens with repo and team size: the bigger the codebase, the more the graph knows that a model would miss, and the faster the docs would otherwise rot.
+
+---
+
 ## How it works
 
 ```
