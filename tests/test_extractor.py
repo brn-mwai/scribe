@@ -39,6 +39,19 @@ def test_rank_core_zero():
     assert rank_core(struct, 0) == []
 
 
+def test_rank_core_excludes_noise_kinds():
+    struct = make_struct(
+        definitions=(
+            ("id", "Field", "core/models.py", 99),
+            ("Engine", "Class", "core/engine.py", 5),
+            ("run", "Function", "core/engine.py", 4),
+        )
+    )
+    names = [d.name for d in rank_core(struct, 5)]
+    assert names == ["Engine", "run"]
+    assert "id" not in names
+
+
 def test_rank_core_excludes_test_file_definitions():
     struct = make_struct(
         definitions=(
