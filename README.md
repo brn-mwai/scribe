@@ -6,7 +6,7 @@
 
 When your code changes, Scribe notices the docs are now wrong and opens a merge request to fix them.
 
-[What it does](#what-it-does) · [Why it matters](#why-it-matters) · [How it works](#how-it-works) · [Quickstart](#quickstart) · [Commands](#commands) · [Status](#project-status)
+[What it does](#what-it-does) · [Why it matters](#why-it-matters) · [How it works](#how-it-works) · [Quickstart](#quickstart) · [Commands](#commands) · [Links](#links) · [Status](#project-status)
 
 [![tests](https://github.com/brn-mwai/scribe/actions/workflows/tests.yml/badge.svg)](https://github.com/brn-mwai/scribe/actions/workflows/tests.yml)
 
@@ -136,6 +136,17 @@ That prints the `AGENTS.md` it *would* write, without changing any files or open
 
 ---
 
+## Links
+
+| | |
+|---|---|
+| Repository | https://gitlab.com/brn-mwai/scribe (mirror: https://github.com/brn-mwai/scribe) |
+| AI Catalog flow (live) | https://gitlab.com/explore/ai-catalog/flows/1011809 |
+| Example contribution | [AGENTS.md for an Orbit repo](https://gitlab.com/gitlab-org/orbit/gkg-evals-harness/-/merge_requests/4) |
+| Design + build plan | [`docs/scribe-system-design.md`](docs/scribe-system-design.md) · [`docs/IMPLEMENTATION.md`](docs/IMPLEMENTATION.md) |
+
+---
+
 ## Project status
 
 | Part | State |
@@ -144,9 +155,9 @@ That prints the `AGENTS.md` it *would* write, without changing any files or open
 | Protects hand-written content | ✅ Done |
 | `run` / `check` / `--dry-run` commands | ✅ Done |
 | Opens merge requests (never auto-merges) | ✅ Done |
-| Test suite | ✅ 54 tests passing |
-| Live GitLab Orbit connection | ⏳ Needs Orbit installed on your machine |
-| Publish to GitLab AI Catalog | ⏳ Needs a GitLab account with Duo enabled |
+| Test suite | ✅ 58 tests passing |
+| Live GitLab Orbit connection | ✅ Verified on real repos |
+| Published to GitLab AI Catalog | ✅ [Live, public](https://gitlab.com/explore/ai-catalog/flows/1011809) |
 
 ---
 
@@ -161,7 +172,7 @@ scribe/
   adapters/gitlab.py    ← the only code that opens a merge request
   cli.py                ← ties it together (run / check)
 docs/                   ← system design + build plan
-tests/                  ← 54 tests
+tests/                  ← 58 tests
 ```
 
 ---
